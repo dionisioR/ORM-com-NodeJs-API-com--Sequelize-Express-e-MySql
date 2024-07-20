@@ -1,0 +1,381 @@
+CRIANDO O ARQUIVO BASE - PACKAGE.JSON
+---------------------------------------
+npm init -y
+
+O `package.json` é um arquivo essencial em projetos Node.js que contém informações sobre o projeto, como nome, versão, dependências, scripts de automação e configurações diversas, facilitando o gerenciamento e distribuição do software.
+
+
+
+INSTALANDO O EXPRESS
+---------------------------------------
+https://expressjs.com/
+npm install express --save
+
+O Express é um framework rápido, flexível e minimalista para Node.js, utilizado principalmente para construir aplicações web e APIs. 
+Ele simplifica o processo de criação de servidores web, oferecendo uma estrutura simples e robusta para lidar com requisições HTTP, rotas, middlewares e muito mais.
+
+
+
+INSTALANDO O BODY-PARSE
+---------------------------------------
+npm install body-parser --save
+
+O `body-parser` é um complemento do Express.js que ajuda a pegar os dados enviados pelos usuários através de formulários ou requisições API. 
+Ele transforma esses dados em um formato que o servidor pode entender e processar, como por exemplo dados de formulários HTML ou requisições JSON.
+
+
+
+INSTALANDO O MYSQL2
+---------------------------------------
+npm install mysql2
+
+O `mysql2` é um pacote Node.js usado para se conectar e trabalhar com bancos de dados MySQL de forma eficiente, permitindo que você execute consultas e manipule dados diretamente do seu código JavaScript ou TypeScript.
+
+
+
+INSTALANDO O SEQUELIZE - SEQUELIZE-CLI - PATH
+---------------------------------------
+https://sequelize.org/
+https://sequelize.org/docs/v6/getting-started/
+https://sequelize.org/docs/v6/other-topics/migrations/#project-bootstrapping
+https://sequelize.org/docs/v6/core-concepts/model-querying-basics/
+
+npm install sequelize sequelize-cli path
+npx sequelize-cli init
+
+O Sequelize é uma ferramenta que facilita a comunicação entre aplicações Node.js e bancos de dados relacionais, permitindo que os desenvolvedores usem JavaScript para gerenciar dados e consultas, sem precisar escrever SQL diretamente.
+
+O Sequelize-CLI é uma ferramenta de linha de comando que simplifica a criação e gestão de modelos, migrações e configurações de bancos de dados usando Sequelize, tudo diretamente do terminal.
+
+O `path` é um módulo do Node.js usado para lidar com caminhos de arquivos e diretórios de forma consistente entre diferentes sistemas operacionais, facilitando a manipulação de arquivos em aplicações JavaScript.
+
+O comando `sequelize-cli init` é usado para inicializar um projeto com Sequelize-CLI. Ele cria a estrutura inicial de pastas e arquivos necessários para começar a usar o Sequelize em um projeto Node.js. Isso inclui configurar arquivos de configuração para o Sequelize, como `config/config.json`, e estruturas para modelos, migrações e sementes, facilitando o início rápido do desenvolvimento com bancos de dados relacionais.
+
+Obs.: Neste exemplo, como criamos a pasta 'api' e estamos executando o 'index.js' nela precisaremos arrastar todasas pastas criadas pelo 'sequelize-cli init' para dentro da pasta 'api' [config, migration, models, seeders]
+Depois criamos um  arquivo '.sequelizerc' na raiz do projeto e colocamos (e configuramos) o seguinte código: [https://sequelize.org/docs/v6/other-topics/migrations/#the-sequelizerc-file]
+
+################################################################
+const path = require('path');
+
+module.exports = {
+  'config': path.resolve('./api/config', 'database.json'),
+  'models-path': path.resolve('./api/models'),
+  'seeders-path': path.resolve('./api/seeders'),
+  'migrations-path': path.resolve('./api/migrations'),
+};
+################################################################
+
+
+
+INSTALANDO NODEMOM
+---------------------------------------
+npm install nodemon --save-dev
+
+Nodemon é uma ferramenta que monitora os arquivos do seu projeto Node.js. 
+Ele reinicia automaticamente o servidor toda vez que você faz alterações no código-fonte, permitindo que você veja as mudanças instantaneamente no navegador ou em outros dispositivos conectados à sua aplicação. 
+Isso economiza tempo e torna o processo de desenvolvimento mais eficiente.
+
+
+Ajustando o arquivo package.json para executar o 'nodemon'
+
+{
+  "name": "api_sequalize_mysql",
+  "version": "1.0.0",
+  "description": "Estudo",
+  "main": "./api/index.js", 
+  "scripts": {
+    "start": "nodemon ./api/index.js",   <<<<<
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parse": "^0.1.0",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
+
+
+
+ESTRUTURA INICIAL DE PASTAS
+---------------------------------------
+- api
+    |_ index.js
+
+Ajustando o caminho do arquivo de inicialização no package.json
+
+{
+  "name": "api_sequalize_mysql",
+  "version": "1.0.0",
+  "description": "Estudo",
+  "main": "./api/index.js",   <<<<<
+  "scripts": {
+    "start": "nodemon ./api/index.js",  
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parse": "^0.1.0",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
+
+
+
+EXECUTANDO O SERVIDOR
+---------------------------------------
+Com node: [node api/index.js]
+Com nodemon: [npm run start]
+
+
+BASE DE DADOS
+---------------------------------------
+Criamos a base de dados no MySQL, em nosso exemplo de estudo 'escola_ingles' [create database escola_ingles;]
+
+Devemos configurar o arquivo 'api/config/config.json' com as informações de nossa base de dados.
+{
+  "development": {
+    "username": "root",   <<<<<<
+    "password": null,   <<<<<<
+    "database": "escola_ingles",  <<<<<<
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+},
+
+
+CRIANDO AS TABELAS
+---------------------------------------
+No terminal digite o seguinte comando para criar as tabelas (tabelas bases)
+
+npx sequelize-cli model:create --name Pessoas --attributes nome:sting,ativo:boolean,email:string,role:string
+
+Dois arquivos serão criados um na pasta 'migration' e outro na pasta 'models'.
+O arquivo na pasta 'migration' é o arquivo de criação da tabela, e o arquivo na
+pasta 'models' é o arquivo de modelagem da tabela.
+
+Para criarmos efetivamente a tabela na base de dados devemos executar o seguinte comando:
+npx sequelize-cli db:migrate
+
+
+
+MIGRATION
+---------------------------------------
+npx sequelize-cli db:migrate
+
+O QUE SÃO MIGRATIONS
+
+Migração em SQL 
+- Se refere a migração de dados, transferência de dados entre plataformas.
+Migração com ORM
+- Se refere a alterações incrementais e rastreáveis no banco.
+- Mudança no esquema de dados.
+- Coordena alterações feitas por diferentes pessoas do time nas tabelas do banco.
+- Rastrea (e reverte) alteralções feitas no banco para debugar conflitos e erros.
+
+
+INSERINDO DADOS NO BANCO
+---------------------------------------
+describe pessoas;
+insert into pessoas(nome, ativo, email, role, createdat, updatedat) values ('Anna Maria', 1, 'anna@g.com', 'estudante', now(), now());
+select * from pessoas;
+
+
+SEEDERS
+---------------------------------------
+Vamos criar um arquivo e configurá-lo para que ele possa popular nossa tabela com alguns dados (sementes) por padrão.
+Digite o comando para criar o arquivo de configuralção:
+
+npx sequelize-cli seed:generate --name [nome_do_arquivo]
+npx sequelize-cli seed:generate --name demo-pessoa
+
+Depois de criado o arquivo ele deve ser configurado com os dados de nossa tabela e depois o seguinte comando deve ser executado: [npx sequelize-cli db:seed:all]
+
+################################################################
+
+"use strict";
+
+/** @type {import('sequelize-cli').Migration} */
+module.exports = {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.bulkInsert(
+      "Pessoas",
+      [
+        {
+          nome: 'Ana Souza',
+          ativo: true,
+          email: 'ana@ana.com',
+          role: 'estudante',
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          nome: 'Marcos Cintra',
+          ativo: true,
+          email: 'marcos@marcos.com',
+          role: 'estudante',
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          nome: 'Felipe Cardoso',
+          ativo: true,
+          email: 'felipe@felipe.com',
+          role: 'estudante',
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          nome: 'Sandra Gomes',
+          ativo: false,
+          email: 'sandra@sandra.com',
+          role: 'estudante',
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          nome: 'Paula Morais',
+          ativo: true,
+          email: 'paula@paula.com',
+          role: 'docente',
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          nome: 'Sergio Lopes',
+          ativo: true,
+          email: 'sergio@sergio.com',
+          role: 'docente',
+          createdAt: new Date(),
+          updatedAt: new Date()
+        }
+      ],
+      {}
+    );
+  },
+
+  async down(queryInterface, Sequelize) {
+    await queryInterface.bulkDelete("Pessoas", null, {});
+  },
+};
+
+################################################################
+
+Depois de configurado o aquivo 'seed' execute o segiunte comando:
+npx sequelize-cli db:seed:all
+
+
+
+DESFAZENDO MIGRAÇÕES
+---------------------------------------
+npx sequelize-cli db:migrate:undo
+- Desfaz a última migração feitas
+
+npx sequelize-cli db:migrate:undo:all
+- Desfaz todas as migrações feitas
+
+npx sequelize-cli db:migrate:undo --name [data-hora]-create-[nome-da-tabela].js
+- Desfaz uma migração espeifica
+
+
+DESFAZENDO SEEDS
+---------------------------------------
+npx sequelize-cli db:seed:undo
+- Desfaz o último seed feito
+
+npx sequelize-cli db:seed:undo --seed nome-do-arquivo
+- Desfaz o seed de uma tabela espeifica
+
+npx sequelize-cli db:seed:undo:all
+- Desfaz todos os seeds feitos
+
+
+API - CRUD
+---------------------------------------
+index - raiz
+index - pasta Router
+pasta Controller - PessoaController
+pasta Routes - pessoaRouter
+
+
+CRIANDO OUTROS MODELOS DO SISTEMA
+---------------------------------------
+OBS: Os modelos devem ser criados obedecendo a ordem hierárquica da MER.
+
+[TABELA NÍVEL]
+npx sequelize-cli model:create --name Niveis --attributes descr_nivel:string
+
+[TABELA TURMA]
+OBS.: 
+- As FKs não devem ser inseridas neste momento
+- dateonly : somente data
+npx sequelize-cli model:create --name Turmas --attributes data_inicio:dateonly
+
+
+[TABELA MATRICULAS]
+OBS.: 
+- As FKs não devem ser inseridas neste momento
+npx sequelize-cli model:create --name Matriculas --attributes status:string
+
+AJUSTAR OS MODELOS
+---------------------------------------
+Nos modelos devemos dizer quem é a PK e quem é a FK
+
+Exemplo: 
+
+      // PK da tabela de origem
+      // Tabela de origem está se relacionando com a tabela de destino
+      // A tabela Turmas tem uma chave extrangeira em Matrículas
+      Turmas.hasMany(models.Matriculas,{foreignKey:'turma_id'})
+
+      // FK
+      // Tabela Turmas tem um FK que pertence a tabela Pessoas
+      Turmas.belongsTo(models.Pessoas, {foreignKey:"docente_id"})
+      // Tabela Turmas tem um FK que pertence a tabela Niveis
+      Turmas.belongsTo(models.Niveis, {foreignKey:'nivel_id'})
+
+
+INSERIR NOS ARQUIVOS DE MIGRAÇÃO AS COLUNAS QUE SERÃO AS FKs
+---------------------------------------
+      docente_id:{ // FK 
+        allowNull:false,
+        type: Sequelize.INTEGER,
+        references: {model: 'Pessoas', key: 'id'}
+      },
+      nivel_id:{ // FK 
+        allowNull:false,
+        type: Sequelize.INTEGER,
+        references: {model: 'Niveis', key: 'id'}
+      },
+
+
+DEPOIS DE CONFIGURADO OS ARQUIVOS [MODELS E MIGRATIONS] DEVEMOS EXECUTAR A MIGRATION
+---------------------------------------
+npx sequelize-cli db:migrate
+
+
+
+POPULANDO AS OUTRAS TABELAS COM SEEDS
+---------------------------------------
+OBS.: Os SEEDs devem ser criados obedecendo a ordem hierárquica da MER.
+
+npx sequelize-cli seed:generate --name demo-nivel
+npx sequelize-cli seed:generate --name demo-turmas
+npx sequelize-cli seed:generate --name demo-matriculas
+
+- Alimentar os seeds com os dados
+
+Executar os SEEDs
+- npx sequelize-cli db:seed:all
+---------------------------------------
+---------------------------------------
+---------------------------------------
+
+
+
